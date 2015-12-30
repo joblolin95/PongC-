@@ -57,6 +57,7 @@ namespace Pong
             ball.Location = new Point(ball.Location.X + speedX, ball.Location.Y + speedY);
             wallCheck();
 
+
         }// timerTick
 
         void wallCheck()
@@ -73,11 +74,18 @@ namespace Pong
 
         void paddleCheck()
         {
+            if(ball.Bounds.IntersectsWith(paddlePlayer.Bounds) || ball.Bounds.IntersectsWith(paddleAI.Bounds))
+            {
+                ballX = -ballX;
+            }
+        }// paddleCheck
 
-        }
+
 
         void movePlayer()
         {
+
+
 
         }
 
@@ -90,12 +98,10 @@ namespace Pong
         {
 
         }
-
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
-
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
