@@ -32,6 +32,7 @@
             this.paddlePlayer = new System.Windows.Forms.PictureBox();
             this.ball = new System.Windows.Forms.PictureBox();
             this.counter = new System.Windows.Forms.GroupBox();
+            this.EndMessage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.paddleAI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paddlePlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ball)).BeginInit();
@@ -77,25 +78,42 @@
             this.counter.TabIndex = 4;
             this.counter.TabStop = false;
             this.counter.Text = "Hits: ";
-            this.counter.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // EndMessage
+            // 
+            this.EndMessage.AutoSize = true;
+            this.EndMessage.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.EndMessage.Font = new System.Drawing.Font("Biondi", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.EndMessage.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.EndMessage.Location = new System.Drawing.Point(142, 193);
+            this.EndMessage.Name = "EndMessage";
+            this.EndMessage.Size = new System.Drawing.Size(299, 96);
+            this.EndMessage.TabIndex = 5;
+            this.EndMessage.Text = "Game Over \r\nSPACE - Restart \r\nESC - Exit";
+            this.EndMessage.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(592, 375);
+            this.ClientSize = new System.Drawing.Size(1012, 565);
+            this.Controls.Add(this.EndMessage);
             this.Controls.Add(this.counter);
             this.Controls.Add(this.ball);
             this.Controls.Add(this.paddlePlayer);
             this.Controls.Add(this.paddleAI);
             this.Name = "Form1";
             this.Text = "Pong";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyPress);
             ((System.ComponentModel.ISupportInitialize)(this.paddleAI)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.paddlePlayer)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ball)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -105,6 +123,7 @@
         private System.Windows.Forms.PictureBox paddlePlayer;
         private System.Windows.Forms.PictureBox ball;
         private System.Windows.Forms.GroupBox counter;
+        private System.Windows.Forms.Label EndMessage;
     }
 }
 
