@@ -31,8 +31,8 @@
             this.paddleAI = new System.Windows.Forms.PictureBox();
             this.paddlePlayer = new System.Windows.Forms.PictureBox();
             this.ball = new System.Windows.Forms.PictureBox();
-            this.counter = new System.Windows.Forms.GroupBox();
             this.EndMessage = new System.Windows.Forms.Label();
+            this.counter = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.paddleAI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paddlePlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ball)).BeginInit();
@@ -68,17 +68,6 @@
             this.ball.TabIndex = 2;
             this.ball.TabStop = false;
             // 
-            // counter
-            // 
-            this.counter.Font = new System.Drawing.Font("Biondi", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.counter.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.counter.Location = new System.Drawing.Point(12, 12);
-            this.counter.Name = "counter";
-            this.counter.Size = new System.Drawing.Size(70, 55);
-            this.counter.TabIndex = 4;
-            this.counter.TabStop = false;
-            this.counter.Text = "Hits: ";
-            // 
             // EndMessage
             // 
             this.EndMessage.AutoSize = true;
@@ -92,14 +81,25 @@
             this.EndMessage.Text = "Game Over \r\nSPACE - Restart \r\nESC - Exit";
             this.EndMessage.Visible = false;
             // 
+            // counter
+            // 
+            this.counter.AutoSize = true;
+            this.counter.Font = new System.Drawing.Font("Biondi", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.counter.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.counter.Location = new System.Drawing.Point(452, 13);
+            this.counter.Name = "counter";
+            this.counter.Size = new System.Drawing.Size(75, 23);
+            this.counter.TabIndex = 6;
+            this.counter.Text = "Score";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1012, 565);
-            this.Controls.Add(this.EndMessage);
             this.Controls.Add(this.counter);
+            this.Controls.Add(this.EndMessage);
             this.Controls.Add(this.ball);
             this.Controls.Add(this.paddlePlayer);
             this.Controls.Add(this.paddleAI);
@@ -122,8 +122,8 @@
         private System.Windows.Forms.PictureBox paddleAI;
         private System.Windows.Forms.PictureBox paddlePlayer;
         private System.Windows.Forms.PictureBox ball;
-        private System.Windows.Forms.GroupBox counter;
         private System.Windows.Forms.Label EndMessage;
+        private System.Windows.Forms.Label counter;
     }
 }
 

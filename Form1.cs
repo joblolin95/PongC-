@@ -17,7 +17,7 @@ namespace Pong
         int count;
         Random rand;
         Timer time;
-        int startSpeed = 10;
+        int startSpeed = 2;
         int speedX;
         int speedY;
 
@@ -35,8 +35,10 @@ namespace Pong
             speedX = startSpeed;
             speedY = startSpeed;
             count = 0;
+            rand = new Random();
             time = new Timer();
             time.Enabled = true;
+            time.Interval = 8;
             time.Tick += new EventHandler(timerTick);
 
             this.Bounds = Screen.PrimaryScreen.Bounds;
@@ -53,7 +55,7 @@ namespace Pong
             ballY = (this.Height / 2) - 75;
             ball.Location = new Point(ballX, ballY);
 
-            counter.Location = new Point(this.Width / 2, this.Top + 50);
+            counter.Location = new Point(this.Width / 2, this.Top + 20);
             EndMessage.Visible = false;
         }
 
@@ -62,16 +64,16 @@ namespace Pong
             ball.Location = new Point(ball.Location.X + speedX, ball.Location.Y + speedY);
             wallCheck();
             paddleCheck();
-            counter.Text = "Hits \n " + count;
+            counter.Text = "Score: " + count;
             moveAI();
-
         }// timerTick
 
         void wallCheck()
         {
             if (ball.Location.Y > this.Bottom - 50 || ball.Location.Y < 0)
             {
-                speedY = -speedY > 0 ? -speedY - 1 : -speedY + 1;
+                //speedY = speedY + rand.Next(0, 2);
+                speedY = -speedY;
             }
             else if (ball.Location.X > this.Width - 10 || ball.Location.X < 10)
             {
@@ -84,11 +86,13 @@ namespace Pong
         void paddleCheck()
         {
             if(ball.Bounds.IntersectsWith(paddlePlayer.Bounds) && speedX < 0)
-            {
-                //int change = count % 4 == 0 && speedX > 0 ? rand.Next(speedX, speedX * 2) : rand.Next(speedX * 2, speedX);
-                //speedX = -speedX - change;
-                speedX = count % 4 == 0 && count != 0 ? -speedX * 2 : -speedX;
+            {                
                 count++;
+                speedX = count % 4 == 0 ? -speedX * 2 : -speedX;
+                if (count / 4 == 3)
+                {
+                    time.Interval = 25;
+                }
             }
             else if (ball.Bounds.IntersectsWith(paddleAI.Bounds))
             {
