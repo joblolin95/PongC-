@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-//using System.Data.SQLite;
+using System.Data.SQLite;
+using System.IO;
 
 namespace Pong
 {
@@ -17,7 +18,8 @@ namespace Pong
         int count;
         Random rand;
         Timer time;
-        int startSpeed = 2;
+        int startSpeedX; //usually started at 2
+        int startSpeedY;
         int speedX;
         int speedY;
 
@@ -31,14 +33,16 @@ namespace Pong
         public Form1()
         {
             InitializeComponent();
-
-            speedX = startSpeed;
-            speedY = startSpeed;
+            
             count = 0;
             rand = new Random();
+            startSpeedX = rand.Next(2, 10);
+            startSpeedY = rand.Next(1, 5);
+            speedX = startSpeedX;
+            speedY = startSpeedY;
             time = new Timer();
             time.Enabled = true;
-            time.Interval = 8;
+            time.Interval = 1;
             time.Tick += new EventHandler(timerTick);
 
             this.Bounds = Screen.PrimaryScreen.Bounds;
@@ -57,6 +61,8 @@ namespace Pong
 
             counter.Location = new Point(this.Width / 2, this.Top + 20);
             EndMessage.Visible = false;
+            PauseMsg.Visible = false;
+
         }
 
         void timerTick(object sender, EventArgs e)
@@ -72,29 +78,56 @@ namespace Pong
         {
             if (ball.Location.Y > this.Bottom - 50 || ball.Location.Y < 0)
             {
+
                 //speedY = speedY + rand.Next(0, 2);
+                //speedY = -(rand.Next(startSpeed, startSpeed + 2));
                 speedY = -speedY;
             }
             else if (ball.Location.X > this.Width - 10 || ball.Location.X < 10)
             {
-                ball.Location = new Point(ballX, ballY);
                 time.Enabled = false;
                 EndMessage.Visible = true;
+
+                if (!File.Exists("pong.db")){
+                    SQLiteConnection.CreateFile("pong.db");
+                }
+
+                using (SQLiteConnection conn = new SQLiteConnection("Data Source = pong.db; Version = 3;"))
+                {
+                    string sql = @"create table if not exists highScores(
+                                    ID INTEGER primary key autoincrement,
+                                    NAME text not null,
+                                    HIGH SCORE int not null
+                                    );";
+                    conn.Open();
+                    SQLiteCommand command = new SQLiteCommand(sql, conn);
+                    command.ExecuteNonQuery();
+                    sql = @"insert into highScores values(null, 'Blaine', 32);";
+                    command.CommandText = sql;                     
+                    command.ExecuteNonQuery();
+                    sql = "select * from highScores;";
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+           
+                    //time.Enabled = false;
+                    //PauseMsg.Visible = true;
+                    
+                    conn.Close();
+                }
+
             }
         }// wallCheck
 
         void paddleCheck()
         {
-            if(ball.Bounds.IntersectsWith(paddlePlayer.Bounds) && speedX < 0)
+            if(ball.Bounds.IntersectsWith(paddlePlayer.Bounds) && speedX < 0 || ball.Bounds.Contains(paddlePlayer.Bounds))
             {                
                 count++;
-                speedX = count % 4 == 0 ? -speedX * 2 : -speedX;
-                if (count / 4 == 3)
-                {
-                    time.Interval = 25;
-                }
+                speedY = count % 3 == 0 ? speedY + 3 : speedY;
+                speedX = -speedX;
+                
             }
-            else if (ball.Bounds.IntersectsWith(paddleAI.Bounds))
+            else if (ball.Bounds.IntersectsWith(paddleAI.Bounds) || ball.Bounds.Contains(paddleAI.Bounds))
             {
                 speedX = -speedX;
             }
@@ -107,19 +140,27 @@ namespace Pong
             // Restart
             else if(e.KeyCode == Keys.Space)
             {
+                ball.Location = new Point(ballX, ballY);
                 EndMessage.Visible = false;
+                PauseMsg.Visible = false;
                 time.Enabled = true;
                 count = 0;
-                speedX = startSpeed;
-                speedY = startSpeed;
+                startSpeedX = rand.Next(2, 10);
+                startSpeedY = rand.Next(1, 5);
+                speedX = startSpeedX;
+                speedY = startSpeedY;
             }
             // Pause
             else if(e.KeyCode == Keys.P)
             {
-                if (time.Enabled)
-                    time.Enabled = false;
-                else
-                    time.Enabled = true;
+                PauseMsg.Visible = true;
+                time.Enabled = false;
+            }
+            // Resume
+            else if(e.KeyCode == Keys.R)
+            {
+                PauseMsg.Visible = false;
+                time.Enabled = true;
             }
             // Down Arrow
             else if(e.KeyCode == Keys.Down && paddlePlayer.Location.Y + 150 < this.Height)
@@ -133,6 +174,7 @@ namespace Pong
             }
         }//keyPress
         
+
         void moveAI()
         {
             if (ball.Location.Y + 100 < this.Height ){

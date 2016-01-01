@@ -33,6 +33,7 @@
             this.ball = new System.Windows.Forms.PictureBox();
             this.EndMessage = new System.Windows.Forms.Label();
             this.counter = new System.Windows.Forms.Label();
+            this.PauseMsg = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.paddleAI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paddlePlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ball)).BeginInit();
@@ -64,7 +65,7 @@
             this.ball.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ball.Location = new System.Drawing.Point(282, 142);
             this.ball.Name = "ball";
-            this.ball.Size = new System.Drawing.Size(14, 14);
+            this.ball.Size = new System.Drawing.Size(17, 17);
             this.ball.TabIndex = 2;
             this.ball.TabStop = false;
             // 
@@ -92,12 +93,24 @@
             this.counter.TabIndex = 6;
             this.counter.Text = "Score";
             // 
+            // PauseMsg
+            // 
+            this.PauseMsg.AutoSize = true;
+            this.PauseMsg.Font = new System.Drawing.Font("Biondi", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PauseMsg.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.PauseMsg.Location = new System.Drawing.Point(656, 297);
+            this.PauseMsg.Name = "PauseMsg";
+            this.PauseMsg.Size = new System.Drawing.Size(288, 128);
+            this.PauseMsg.TabIndex = 7;
+            this.PauseMsg.Text = "Game Paused\r\nR - Resume\r\nSPACE - Restart\r\nESC - Exit";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1012, 565);
+            this.Controls.Add(this.PauseMsg);
             this.Controls.Add(this.counter);
             this.Controls.Add(this.EndMessage);
             this.Controls.Add(this.ball);
@@ -124,6 +137,7 @@
         private System.Windows.Forms.PictureBox ball;
         private System.Windows.Forms.Label EndMessage;
         private System.Windows.Forms.Label counter;
+        private System.Windows.Forms.Label PauseMsg;
     }
 }
 
