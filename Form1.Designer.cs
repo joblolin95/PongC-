@@ -34,6 +34,9 @@
             this.EndMessage = new System.Windows.Forms.Label();
             this.counter = new System.Windows.Forms.Label();
             this.PauseMsg = new System.Windows.Forms.Label();
+            this.Scores = new System.Windows.Forms.Label();
+            this.nameBox = new System.Windows.Forms.TextBox();
+            this.nameMessage = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.paddleAI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.paddlePlayer)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ball)).BeginInit();
@@ -104,12 +107,44 @@
             this.PauseMsg.TabIndex = 7;
             this.PauseMsg.Text = "Game Paused\r\nR - Resume\r\nSPACE - Restart\r\nESC - Exit";
             // 
+            // Scores
+            // 
+            this.Scores.AutoSize = true;
+            this.Scores.Font = new System.Drawing.Font("Biondi", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Scores.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Scores.Location = new System.Drawing.Point(360, 266);
+            this.Scores.Name = "Scores";
+            this.Scores.Size = new System.Drawing.Size(142, 23);
+            this.Scores.TabIndex = 8;
+            this.Scores.Text = "High Scores";
+            // 
+            // nameBox
+            // 
+            this.nameBox.Location = new System.Drawing.Point(652, 114);
+            this.nameBox.Name = "nameBox";
+            this.nameBox.Size = new System.Drawing.Size(116, 20);
+            this.nameBox.TabIndex = 9;
+            // 
+            // nameMessage
+            // 
+            this.nameMessage.Font = new System.Drawing.Font("Biondi", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nameMessage.Location = new System.Drawing.Point(643, 142);
+            this.nameMessage.Name = "nameMessage";
+            this.nameMessage.Size = new System.Drawing.Size(125, 48);
+            this.nameMessage.TabIndex = 10;
+            this.nameMessage.Text = "Enter Name";
+            this.nameMessage.UseVisualStyleBackColor = true;
+            this.nameMessage.Click += new System.EventHandler(this.nameBox_Enter);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1012, 565);
+            this.Controls.Add(this.nameMessage);
+            this.Controls.Add(this.nameBox);
+            this.Controls.Add(this.Scores);
             this.Controls.Add(this.PauseMsg);
             this.Controls.Add(this.counter);
             this.Controls.Add(this.EndMessage);
@@ -138,6 +173,9 @@
         private System.Windows.Forms.Label EndMessage;
         private System.Windows.Forms.Label counter;
         private System.Windows.Forms.Label PauseMsg;
+        private System.Windows.Forms.Label Scores;
+        private System.Windows.Forms.TextBox nameBox;
+        private System.Windows.Forms.Button nameMessage;
     }
 }
 

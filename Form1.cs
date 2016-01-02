@@ -16,6 +16,7 @@ namespace Pong
     {
         #region Data fields
         int count;
+        String name;
         Random rand;
         Timer time;
         int startSpeedX; //usually started at 2
@@ -33,7 +34,9 @@ namespace Pong
         public Form1()
         {
             InitializeComponent();
-            
+            nameBox.Visible = true;
+            nameMessage.Visible = true;
+       
             count = 0;
             rand = new Random();
             startSpeedX = rand.Next(2, 10);
@@ -62,7 +65,14 @@ namespace Pong
             counter.Location = new Point(this.Width / 2, this.Top + 20);
             EndMessage.Visible = false;
             PauseMsg.Visible = false;
-
+            Scores.Visible = false;
+            Scores.Location = new Point(EndMessage.Location.X, EndMessage.Location.Y + 150);
+            nameMessage.Location = new Point(this.Width/2, this.Height / 2 + 30);
+            nameBox.Location = new Point(this.Width / 2, this.Height / 2);
+            nameMessage.Visible = false;
+            nameBox.Visible = false;
+            
+            
         }
 
         void timerTick(object sender, EventArgs e)
@@ -78,9 +88,6 @@ namespace Pong
         {
             if (ball.Location.Y > this.Bottom - 50 || ball.Location.Y < 0)
             {
-
-                //speedY = speedY + rand.Next(0, 2);
-                //speedY = -(rand.Next(startSpeed, startSpeed + 2));
                 speedY = -speedY;
             }
             else if (ball.Location.X > this.Width - 10 || ball.Location.X < 10)
@@ -95,26 +102,29 @@ namespace Pong
                 using (SQLiteConnection conn = new SQLiteConnection("Data Source = pong.db; Version = 3;"))
                 {
                     string sql = @"create table if not exists highScores(
-                                    ID INTEGER primary key autoincrement,
-                                    NAME text not null,
-                                    HIGH SCORE int not null
+                                    [ID] INTEGER primary key autoincrement,
+                                    [NAME] text not null,
+                                    [HIGH] int not null
                                     );";
                     conn.Open();
                     SQLiteCommand command = new SQLiteCommand(sql, conn);
                     command.ExecuteNonQuery();
-                    sql = @"insert into highScores values(null, 'Blaine', 32);";
+                    sql = @"insert into highScores values(null, 'Blaine'," + count + ");";
                     command.CommandText = sql;                     
                     command.ExecuteNonQuery();
-                    sql = "select * from highScores;";
+                    sql = "select * from highScores order by HIGH desc limit 5;";
                     command.CommandText = sql;
-                    command.ExecuteNonQuery();
-           
-                    //time.Enabled = false;
-                    //PauseMsg.Visible = true;
-                    
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Scores.Text += "\n" + reader["NAME"] + "   " + reader["HIGH"];
+                        }
+
+                    }                    
                     conn.Close();
                 }
-
+                Scores.Visible = true;
             }
         }// wallCheck
 
@@ -138,11 +148,12 @@ namespace Pong
             // Close
             if(e.KeyCode == Keys.Escape) { this.Close(); }
             // Restart
-            else if(e.KeyCode == Keys.Space)
+            else if(e.KeyCode == Keys.Space && nameBox.Visible == false)
             {
                 ball.Location = new Point(ballX, ballY);
                 EndMessage.Visible = false;
                 PauseMsg.Visible = false;
+                Scores.Visible = false;
                 time.Enabled = true;
                 count = 0;
                 startSpeedX = rand.Next(2, 10);
@@ -151,13 +162,13 @@ namespace Pong
                 speedY = startSpeedY;
             }
             // Pause
-            else if(e.KeyCode == Keys.P)
+            else if(e.KeyCode == Keys.P && nameBox.Visible == false)
             {
                 PauseMsg.Visible = true;
                 time.Enabled = false;
             }
             // Resume
-            else if(e.KeyCode == Keys.R)
+            else if(e.KeyCode == Keys.R && nameBox.Visible == false)
             {
                 PauseMsg.Visible = false;
                 time.Enabled = true;
@@ -185,6 +196,15 @@ namespace Pong
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void nameBox_Enter(object sender, EventArgs e)
+        {
+            name = nameBox.Text;
+            nameBox.Text = "";
+            nameBox.Visible = false;
+            nameMessage.Visible = false;
+            Scores.Visible = true;
         }
     }
 }
