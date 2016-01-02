@@ -66,6 +66,7 @@ namespace Pong
             EndMessage.Visible = false;
             PauseMsg.Visible = false;
             Scores.Visible = false;
+            EndMessage.Location = new Point(this.Width / 2 - 100, this.Height / 2 - 250);
             Scores.Location = new Point(EndMessage.Location.X, EndMessage.Location.Y + 150);
             nameMessage.Location = new Point(this.Width/2, this.Height / 2 + 30);
             nameBox.Location = new Point(this.Width / 2, this.Height / 2);
