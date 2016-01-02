@@ -132,6 +132,7 @@
             this.nameMessage.Name = "nameMessage";
             this.nameMessage.Size = new System.Drawing.Size(125, 48);
             this.nameMessage.TabIndex = 10;
+            this.nameMessage.TabStop = false;
             this.nameMessage.Text = "Enter Name";
             this.nameMessage.UseVisualStyleBackColor = true;
             this.nameMessage.Click += new System.EventHandler(this.nameBox_Enter);
@@ -151,6 +152,7 @@
             this.Controls.Add(this.ball);
             this.Controls.Add(this.paddlePlayer);
             this.Controls.Add(this.paddleAI);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "Pong";
             this.TopMost = true;

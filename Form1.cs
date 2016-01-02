@@ -71,8 +71,6 @@ namespace Pong
             nameBox.Location = new Point(this.Width / 2, this.Height / 2);
             nameMessage.Visible = false;
             nameBox.Visible = false;
-            
-            
         }
 
         void timerTick(object sender, EventArgs e)
@@ -93,38 +91,10 @@ namespace Pong
             else if (ball.Location.X > this.Width - 10 || ball.Location.X < 10)
             {
                 time.Enabled = false;
-                EndMessage.Visible = true;
-
-                if (!File.Exists("pong.db")){
-                    SQLiteConnection.CreateFile("pong.db");
-                }
-
-                using (SQLiteConnection conn = new SQLiteConnection("Data Source = pong.db; Version = 3;"))
-                {
-                    string sql = @"create table if not exists highScores(
-                                    [ID] INTEGER primary key autoincrement,
-                                    [NAME] text not null,
-                                    [HIGH] int not null
-                                    );";
-                    conn.Open();
-                    SQLiteCommand command = new SQLiteCommand(sql, conn);
-                    command.ExecuteNonQuery();
-                    sql = @"insert into highScores values(null, 'Blaine'," + count + ");";
-                    command.CommandText = sql;                     
-                    command.ExecuteNonQuery();
-                    sql = "select * from highScores order by HIGH desc limit 5;";
-                    command.CommandText = sql;
-                    using (SQLiteDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Scores.Text += "\n" + reader["NAME"] + "   " + reader["HIGH"];
-                        }
-
-                    }                    
-                    conn.Close();
-                }
-                Scores.Visible = true;
+                nameMessage.Visible = true;
+                nameBox.Visible = true;
+                //nameMessage.Focus();
+               
             }
         }// wallCheck
 
@@ -204,7 +174,41 @@ namespace Pong
             nameBox.Text = "";
             nameBox.Visible = false;
             nameMessage.Visible = false;
+            EndMessage.Visible = true;
             Scores.Visible = true;
+            EndMessage.Focus();
+
+            if (!File.Exists("pong.db"))
+            {
+                SQLiteConnection.CreateFile("pong.db");
+            }
+
+            using (SQLiteConnection conn = new SQLiteConnection("Data Source = pong.db; Version = 3;"))
+            {
+                string sql = @"create table if not exists highScores(
+                                    [ID] INTEGER primary key autoincrement,
+                                    [NAME] text not null,
+                                    [HIGH] int not null
+                                    );";
+                conn.Open();
+                SQLiteCommand command = new SQLiteCommand(sql, conn);
+                command.ExecuteNonQuery();
+                sql = @"insert into highScores values(null,'" + name + "' ," + count + ");";
+                command.CommandText = sql;
+                command.ExecuteNonQuery();
+                sql = "select * from highScores order by HIGH desc limit 5;";
+                command.CommandText = sql;
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Scores.Text += "\n" + reader["NAME"] + "   " + reader["HIGH"];
+                    }
+
+                }
+                conn.Close();
+            }// using
+
         }
     }
 }
