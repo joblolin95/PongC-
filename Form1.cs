@@ -125,6 +125,7 @@ namespace Pong
                 EndMessage.Visible = false;
                 PauseMsg.Visible = false;
                 Scores.Visible = false;
+                Scores.Text = "High Scores";
                 time.Enabled = true;
                 count = 0;
                 startSpeedX = rand.Next(2, 10);
@@ -179,36 +180,48 @@ namespace Pong
             Scores.Visible = true;
             EndMessage.Focus();
 
-            if (!File.Exists("pong.db"))
+            if (name != "")
             {
-                SQLiteConnection.CreateFile("pong.db");
-            }
+                if (!File.Exists("pong.db"))
+                {
+                    SQLiteConnection.CreateFile("pong.db");
+                }
 
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source = pong.db; Version = 3;"))
-            {
-                string sql = @"create table if not exists highScores(
-                                    [ID] INTEGER primary key autoincrement,
-                                    [NAME] text not null,
+                using (SQLiteConnection conn = new SQLiteConnection("Data Source = pong.db; Version = 3;"))
+                {
+                    string sql = @"create table if not exists highScores(
+                                    [NAME] text primary key not null,
                                     [HIGH] int not null
                                     );";
-                conn.Open();
-                SQLiteCommand command = new SQLiteCommand(sql, conn);
-                command.ExecuteNonQuery();
-                sql = @"insert into highScores values(null,'" + name + "' ," + count + ");";
-                command.CommandText = sql;
-                command.ExecuteNonQuery();
-                sql = "select * from highScores order by HIGH desc limit 5;";
-                command.CommandText = sql;
-                using (SQLiteDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
+                    conn.Open();
+                    SQLiteCommand command = new SQLiteCommand(sql, conn);
+                    command.ExecuteNonQuery();
+                    sql = "select count(*) from highScores where NAME = '" + name + "';";
+                    command.CommandText = sql;
+                    Int32 num = Convert.ToInt32(command.ExecuteScalar());
+                    if (num == 0)
                     {
-                        Scores.Text += "\n" + reader["NAME"] + "   " + reader["HIGH"];
+                        sql = @"insert into highScores values('" + name + "' ," + count + ");";
+                    }// if
+                    else
+                    {
+                        sql = "update highScores set HIGH = " + count + " where NAME = '" + name + "' and HIGH < " + count + ";";
                     }
+                    command.CommandText = sql;
+                    command.ExecuteNonQuery();
+                    sql = "select * from highScores order by HIGH desc limit 5;";
+                    command.CommandText = sql;
+                    using (SQLiteDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Scores.Text += "\n" + reader["NAME"] + "   " + reader["HIGH"];
+                        }
 
-                }
-                conn.Close();
-            }// using
+                    }
+                    conn.Close();
+                }// using
+            }// end if
 
         }
     }
