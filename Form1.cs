@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SQLite;
+
 using System.IO;
 
 namespace Pong
@@ -205,25 +205,23 @@ namespace Pong
         //           in the database, the high score for that name is updated using count
         void addToDatabase()
         {
-            // Creates database if it doesn't already exist
-            if (!File.Exists("pong.db"))
-            {
-                SQLiteConnection.CreateFile("pong.db");
-            }
+            
 
             // Connects to database
-            using (SQLiteConnection conn = new SQLiteConnection("Data Source = pong.db; Version = 3;"))
+            using (SqlConnection conn = new SqlConnection("Server=.\\SQLEXPRESS; Database=Pong; Integrated Security = true"))
             {
                 // Creates the highScores table if it doesn't already exist
-                string sql = @"create table if not exists highScores(
-                                    [NAME] text primary key not null,
-                                    [HIGH] int not null
-                                    );";
+                //string sql = @"create table if not exists highScores(
+                //                    NAME varchar(250) primary key not null,
+                //                    HIGH int not null
+                                    
+                //                    );";
                 conn.Open();
-                SQLiteCommand command = new SQLiteCommand(sql, conn);
-                command.ExecuteNonQuery();
+               
+                //command.ExecuteNonQuery();
                 // Counts number of records where NAME = name
-                sql = "select count(*) from highScores where NAME = '" + name + "';";
+                String sql = "select count(*) from pong.dbo.highScores where NAME = '" + name + "';";
+                SqlCommand command = new SqlCommand(sql, conn);
                 command.CommandText = sql;
                 Int32 num = Convert.ToInt32(command.ExecuteScalar());
 
@@ -231,29 +229,37 @@ namespace Pong
                 // name and count
                 if (num == 0)
                 {
-                    sql = @"insert into highScores values('" + name + "' ," + count + ");";
+                    sql = @"insert into highScores values('" + name + "' , GETDATE(), " + count + ");";
                 }// if
                 // Else, update the high score corresponding to name, granted that the high score in the database
                 // is lower than count
                 else
                 {
-                    sql = "update highScores set HIGH = " + count + " where NAME = '" + name + "' and HIGH < " + count + ";";
+                    sql = "update pong.dbo.highScores set SCORE = " + count + ", DATECREATED = GETDATE() where NAME = '" + name + "' and SCORE < " + count + ";";
                 }
                 command.CommandText = sql;
                 command.ExecuteNonQuery();
                 // Display the top 5 high scores in the database.
-                sql = "select * from highScores order by HIGH desc limit 5;";
+                sql = "select top 5 * from pong.dbo.highScores order by SCORE desc;";
                 command.CommandText = sql;
-                using (SQLiteDataReader reader = command.ExecuteReader())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        Scores.Text += "\n" + reader["NAME"] + "   " + reader["HIGH"];
+                        Scores.Text += "\n" + reader["NAME"] + "   " + reader["SCORE"];
                     }
 
                 }// reader using
                 conn.Close();
             }// database connection using
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //if (this.WindowState == FormWindowState.Maximized)
+            //    this.WindowState = FormWindowState.Minimized;
+            //else if (this.WindowState == FormWindowState.Minimized)
+            //    this.WindowState = FormWindowState.Maximized;        
         }
     }
 }

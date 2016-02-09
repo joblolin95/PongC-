@@ -156,6 +156,7 @@
             this.Name = "Form1";
             this.Text = "Pong";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyPress);
             ((System.ComponentModel.ISupportInitialize)(this.paddleAI)).EndInit();
